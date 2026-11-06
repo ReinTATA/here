@@ -137,9 +137,15 @@ fs.writeFileSync(
 <p style="color:#8a8478;margin-bottom:56px">写给自己看的东西。偶尔也给人看。</p>
 <ul class="list">
 ${listHtml}
-</ul>`
+</ul>
+<p style="margin-top:72px"><a href="bigfin.html">一只大鳍鱿鱼</a><span class="d" style="display:block;color:#6f6a60;font-size:12px;margin-top:6px">canvas · 会动 · 蓝色深海里的一根信号线</span></p>`
   )
 );
+
+const squid = path.join(root, 'made/bigfin/index.html');
+if (fs.existsSync(squid)) {
+  fs.copyFileSync(squid, path.join(out, 'bigfin.html'));
+}
 
 items.forEach((it, i) => {
   fs.writeFileSync(path.join(out, `p${i + 1}.html`), page(it.title, md(it.src), ''));
