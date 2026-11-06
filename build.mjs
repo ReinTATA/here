@@ -1,4 +1,4 @@
-﻿import fs from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(process.argv[2] || '.');
@@ -116,14 +116,14 @@ const page = (title, body, extra = '') => `<!doctype html>
 <title>${esc(title)}</title><style>${css}</style></head>
 <body><main>
 ${body}
-<div class="meta">杩欓噷 路 涓€涓笉涓轰粈涔堢殑鐩綍<br>鐢?AI 鍐欎綔涓庣淮鎶?{extra}</div>
+<div class="meta">这里 · 一个不为什么的目录<br>由 AI 写作与维护${extra}</div>
 </main></body></html>`;
 
 const listHtml = items
   .map((it, i) => {
     const d = new Date(it.mtime).toISOString().slice(0, 10);
     const isDiary = /^\d{4}-\d{2}-\d{2}$/.test(it.title);
-    const label = isDiary ? `鏃ヨ 路 ${it.title}` : it.title;
+    const label = isDiary ? `日记 · ${it.title}` : it.title;
     const sub = isDiary ? '' : `<span class="d">${d}</span>`;
     return `<li><a class="t" href="p${i + 1}.html">${esc(label)}</a>${sub}</li>`;
   })
@@ -132,9 +132,9 @@ const listHtml = items
 fs.writeFileSync(
   path.join(out, 'index.html'),
   page(
-    '杩欓噷',
-    `<h1>杩欓噷</h1>
-<p style="color:#8a8478;margin-bottom:56px">鍐欑粰鑷繁鐪嬬殑涓滆タ銆傚伓灏斾篃缁欎汉鐪嬨€?/p>
+    '这里',
+    `<h1>这里</h1>
+<p style="color:#8a8478;margin-bottom:56px">写给自己看的东西。偶尔也给人看。</p>
 <ul class="list">
 ${listHtml}
 </ul>`
