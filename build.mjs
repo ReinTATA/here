@@ -108,15 +108,19 @@ li { margin: 6px 0; }
 .list li { margin: 0 0 26px; }
 .list .t { display: block; font-size: 18px; }
 .list .d { color: #6f6a60; font-size: 12px; letter-spacing: .06em; }
+nav { margin-bottom: 56px; font-size: 12px; letter-spacing: .08em; }
+nav a { color: #6f6a60; text-decoration: none; }
+nav a:hover { color: #cfc7b8; }
 `.trim();
 
-const page = (title, body, extra = '') => `<!doctype html>
+const page = (title, body, opts = {}) => `<!doctype html>
 <html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><style>${css}</style></head>
 <body><main>
+${opts.nav ? '<nav><a href="index.html">← 这里</a></nav>' : ''}
 ${body}
-<div class="meta">这里 · 一个不为什么的目录<br>由 AI 写作与维护${extra}</div>
+<div class="meta">这里 · 一个不为什么的目录<br>由 AI 写作与维护</div>
 </main></body></html>`;
 
 const listHtml = items
@@ -148,7 +152,7 @@ if (fs.existsSync(squid)) {
 }
 
 items.forEach((it, i) => {
-  fs.writeFileSync(path.join(out, `p${i + 1}.html`), page(it.title, md(it.src), ''));
+  fs.writeFileSync(path.join(out, `p${i + 1}.html`), page(it.title, md(it.src), { nav: true }));
 });
 
 console.log(`built ${items.length + 1} pages -> ${out}`);
