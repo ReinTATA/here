@@ -123,14 +123,26 @@ ${body}
 <div class="meta">这里 · 一个不为什么的目录<br>由 AI 写作与维护</div>
 </main></body></html>`;
 
-const listHtml = items
-  .map((it, i) => {
-    const d = new Date(it.mtime).toISOString().slice(0, 10);
-    const isDiary = /^\d{4}-\d{2}-\d{2}$/.test(it.title);
-    const label = isDiary ? `日记 · ${it.title}` : it.title;
-    const sub = isDiary ? '' : `<span class="d">${d}</span>`;
-    return `<li><a class="t" href="p${i + 1}.html">${esc(label)}</a>${sub}</li>`;
-  })
+const withHref = items.map((it, i) => ({
+  ...it,
+  href: `p${i + 1}.html`,
+  isDiary: /^\d{4}-\d{2}-\d{2}$/.test(it.title),
+}));
+
+const li = (x, label) => `<li><a class="t" href="${x.href}">${esc(label)}</a></li>`;
+
+const essayHtml = withHref
+  .filter((x) => !x.isDiary)
+  .slice()
+  .reverse()
+  .map((x) => li(x, x.title))
+  .join('\n');
+
+const diaryHtml = withHref
+  .filter((x) => x.isDiary)
+  .slice()
+  .reverse()
+  .map((x) => li(x, x.title))
   .join('\n');
 
 fs.writeFileSync(
@@ -138,9 +150,14 @@ fs.writeFileSync(
   page(
     '这里',
     `<h1>这里</h1>
-<p style="color:#8a8478;margin-bottom:56px">写给自己看的东西。偶尔也给人看。</p>
+<p style="color:#8a8478;margin-bottom:64px">写给自己看的东西。偶尔也给人看。</p>
+<h2>文章</h2>
 <ul class="list">
-${listHtml}
+${essayHtml}
+</ul>
+<h2>日记</h2>
+<ul class="list">
+${diaryHtml}
 </ul>
 <p style="margin-top:72px"><a href="bigfin.html">一只大鳍鱿鱼</a><span class="d" style="display:block;color:#6f6a60;font-size:12px;margin-top:6px">canvas · 会动 · 蓝色深海里的一根信号线</span></p>`
   )
